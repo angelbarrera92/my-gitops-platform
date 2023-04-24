@@ -1,0 +1,30 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: retool
+  namespace: kube-system
+spec:
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: SecretStore
+    name: secret-store
+  target:
+    name: retool-secrets
+    creationPolicy: Owner
+  data:
+    - secretKey: RETOOL_LICENSE_KEY
+      remoteRef:
+        key: RETOOL_LICENSE_KEY
+    - secretKey: RETOOL_ENCRYPTION_KEY
+      remoteRef:
+        key: RETOOL_ENCRYPTION_KEY
+    - secretKey: RETOOL_JWT_SECRET
+      remoteRef:
+        key: RETOOL_JWT_SECRET
+    - secretKey: RETOOL_DB_PASSWORD
+      remoteRef:
+        key: RETOOL_DB_PASSWORD
+    - secretKey: GITHUB_PAT
+      remoteRef:
+        key: GITHUB_PAT

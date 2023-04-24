@@ -1,0 +1,42 @@
+---
+# Create a HelmRepository object to point to the reloader chart
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: stakater
+  namespace: kube-system
+spec:
+  interval: 1m
+  url: https://stakater.github.io/stakater-charts
+---
+# Create a HelmRelease object to install the reloader
+kind: HelmRelease
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+metadata:
+  name: reloader
+  namespace: kube-system
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: reloader
+      version: "v1.0.22"
+      sourceRef:
+        kind: HelmRepository
+        name: stakater
+        namespace: kube-system
+      interval: 1m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    reloader:
+      custom_annotations:
+        configmap: reloader.my-gitops-platform.com/configmap
+        secret: reloader.my-gitops-platform.com/secret
+        auto: reloader.my-gitops-platform.com/auto
+        search: reloader.my-gitops-platform.com/search
+        match: reloader.my-gitops-platform.com/match
