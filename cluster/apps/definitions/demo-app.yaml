@@ -1,5 +1,4 @@
 ---
-# Create a HelmRelease object to install an app based on onechart
 kind: HelmRelease
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 metadata:
@@ -26,5 +25,5 @@ spec:
   targetNamespace: demo-app
   values:
     image:
-      repository: nginx
-      tag: stable
+      repository: docker.io/ealen/echo-server
+      tag: latest
