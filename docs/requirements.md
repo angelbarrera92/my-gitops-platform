@@ -11,4 +11,14 @@ $ kubectl apply -f cluster/bootstrap/flux-system.yaml
 
 ## External Secret Operator
 
+I use Gitlab to store secrets, then I use the External Secret Operator to retrieve them and store them in the cluster.
+
+Required secrets to be configured in Gitlab.
+
+- `GITHUB_PAT`: Github Personal Access Token to push to the repository.
+- `RETOOL_DB_PASSWORD`: Password for the retool database.
+- `RETOOL_ENCRYPTION_KEY`: Encryption key for retool.
+- `RETOOL_JWT_SECRET`: JWT secret for retool.
+- `RETOOL_LICENSE_KEY`: License key for retool.
+
 ## Retool
