@@ -27,3 +27,6 @@ spec:
     image:
       repository: docker.io/library/nginx
       tag: latest
+    ingress:
+      ingressClassName: ngrok
+      host: my-awesome-app-angelbarrera.ngrok.io
