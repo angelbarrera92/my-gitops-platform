@@ -6,3 +6,4 @@ resources:
   - reloader.yaml
   - postgresql.yaml
   - retool.yaml
+  - metrics-server.yaml
