@@ -7,3 +7,4 @@ resources:
   - postgresql.yaml
   - retool.yaml
   - metrics-server.yaml
+  - ngrok-ingress-controller.yaml
