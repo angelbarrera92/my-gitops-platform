@@ -1,0 +1,6 @@
+kind: Kustomization
+resources:
+  - attacher.yaml
+  - csi-s3.yaml
+  - provisioner.yaml
+
