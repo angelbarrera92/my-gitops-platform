@@ -3,8 +3,5 @@ kind: Kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 resources:
   - external-secrets-operator.yaml
-  - reloader.yaml
-  - postgresql.yaml
-  - retool.yaml
   - metrics-server.yaml
-  # - ngrok-ingress-controller.yaml
+  - reloader.yaml
