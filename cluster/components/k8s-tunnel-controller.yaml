@@ -20,7 +20,7 @@ spec:
   chart:
     spec:
       chart: k8s-tunnel-controller
-      version: "0.0.0-1e43ff865b17f191599ce316cd1979982f4b927a"
+      version: "0.2.0"
       sourceRef:
         kind: HelmRepository
         name: k8s-tunnel-controller
@@ -34,7 +34,7 @@ spec:
       retries: -1
   values:
     image:
-      tag: 1e43ff865b17f191599ce316cd1979982f4b927a
+      tag: main
     token:
       existingSecret: k8s-tunnel-controller
       tokenKey: token
