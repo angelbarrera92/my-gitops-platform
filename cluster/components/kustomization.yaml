@@ -5,5 +5,6 @@ resources:
   - k8s-csi-s3
   - external-secrets-operator.yaml
   - keda.yaml
+  - k8s-tunnel-controller.yaml
   - metrics-server.yaml
   - reloader.yaml

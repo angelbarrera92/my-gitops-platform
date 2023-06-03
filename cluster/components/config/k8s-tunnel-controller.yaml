@@ -1,0 +1,18 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: k8s-tunnel-controller
+  namespace: kube-system
+spec:
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: SecretStore
+    name: secret-store
+  target:
+    name: k8s-tunnel-controller
+    creationPolicy: Owner
+  data:
+    - secretKey: token
+      remoteRef:
+        key: K8S_TUNNEL_CONTROLLER_TOKEN
