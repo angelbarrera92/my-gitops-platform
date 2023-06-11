@@ -13,12 +13,30 @@ spec:
     name: postgres-operator
     creationPolicy: Owner
   data:
+    # Endpoint for S3-compatible storage
     - secretKey: AWS_S3_ENDPOINT
       remoteRef:
         key: S3_ENDPOINT
-    - secretKey: AWS_SECRET_KEY_ID
+    - secretKey: WALE_S3_ENDPOINT
+      remoteRef:
+        key: S3_ENDPOINT
+    - secretKey: LOG_S3_ENDPOINT
+      remoteRef:
+        key: S3_ENDPOINT
+    # Access key for S3-compatible storage
+    - secretKey: AWS_ACCESS_KEY_ID
       remoteRef:
         key: S3_ACCESS_KEY_ID
+    # Secret key for S3-compatible storage
     - secretKey: AWS_SECRET_ACCESS_KEY
       remoteRef:
         key: S3_ACCESS_KEY_SECRET
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-operator
+  namespace: kube-system
+data:
+  BACKUP_SCHEDULE: "*/10 * * * *"
+  LOG_SHIP_SCHEDULE: "*/10 * * * *"

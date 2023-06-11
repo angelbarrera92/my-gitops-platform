@@ -34,6 +34,11 @@ spec:
       retries: -1
   # https://github.com/zalando/postgres-operator/blob/gh-pages/charts/postgres-operator/values.yaml
   values:
+    podAnnotations:
+      reloader.my-gitops-platform.com/auto: "true"
+    configKubernetes:
+      pod_environment_secret: postgres-operator
+      pod_environment_configmap: postgres-operator
     configAwsOrGcp:
       additional_secret_mount: postgres-operator
       log_s3_bucket: my-gitops-platform
@@ -48,7 +53,7 @@ spec:
       targetPath: configLogicalBackup.logical_backup_s3_endpoint
     - kind: Secret
       name: postgres-operator
-      valuesKey: AWS_SECRET_KEY_ID
+      valuesKey: AWS_ACCESS_KEY_ID
       targetPath: configLogicalBackup.logical_backup_s3_access_key_id
     - kind: Secret
       name: postgres-operator
