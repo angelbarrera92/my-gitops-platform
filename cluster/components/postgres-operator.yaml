@@ -32,3 +32,25 @@ spec:
   upgrade:
     remediation:
       retries: -1
+  # https://github.com/zalando/postgres-operator/blob/gh-pages/charts/postgres-operator/values.yaml
+  values:
+    configAwsOrGcp:
+      additional_secret_mount: postgres-operator
+      log_s3_bucket: my-gitops-platform
+      wal_s3_bucket: my-gitops-platform
+    configLogicalBackup:
+      logical_backup_s3_bucket: my-gitops-platform
+      logical_backup_s3_retention_time: 7 days
+  valuesFrom:
+    - kind: Secret
+      name: postgres-operator
+      valuesKey: AWS_S3_ENDPOINT
+      targetPath: configLogicalBackup.logical_backup_s3_endpoint
+    - kind: Secret
+      name: postgres-operator
+      valuesKey: AWS_SECRET_KEY_ID
+      targetPath: configLogicalBackup.logical_backup_s3_access_key_id
+    - kind: Secret
+      name: postgres-operator
+      valuesKey: AWS_SECRET_ACCESS_KEY
+      targetPath: configLogicalBackup.logical_backup_s3_secret_access_key

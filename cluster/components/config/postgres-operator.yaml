@@ -1,0 +1,24 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: postgres-operator
+  namespace: kube-system
+spec:
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: SecretStore
+    name: secret-store
+  target:
+    name: postgres-operator
+    creationPolicy: Owner
+  data:
+    - secretKey: AWS_S3_ENDPOINT
+      remoteRef:
+        key: S3_ENDPOINT
+    - secretKey: AWS_SECRET_KEY_ID
+      remoteRef:
+        key: S3_ACCESS_KEY_ID
+    - secretKey: AWS_SECRET_ACCESS_KEY
+      remoteRef:
+        key: S3_ACCESS_KEY_SECRET
