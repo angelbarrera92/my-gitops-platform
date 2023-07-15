@@ -7,5 +7,4 @@ resources:
   - keda.yaml
   - k8s-tunnel-controller.yaml
   - metrics-server.yaml
-  - postgres-operator.yaml
   - reloader.yaml
