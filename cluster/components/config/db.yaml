@@ -1,0 +1,121 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: cnpg-debug
+  namespace: kube-system
+spec:
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: SecretStore
+    name: secret-store
+  target:
+    name: cnpg-debug
+    creationPolicy: Owner
+  data:
+    # Endpoint for S3-compatible storage
+    - secretKey: AWS_S3_ENDPOINT
+      remoteRef:
+        key: S3_ENDPOINT
+    # Access key for S3-compatible storage
+    - secretKey: AWS_ACCESS_KEY_ID
+      remoteRef:
+        key: S3_ACCESS_KEY_ID
+    # Secret key for S3-compatible storage
+    - secretKey: AWS_SECRET_ACCESS_KEY
+      remoteRef:
+        key: S3_ACCESS_KEY_SECRET
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: debug-db-secret
+  namespace: kube-system
+spec:
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: SecretStore
+    name: secret-store
+  target:
+    name: debug-db-secret
+    creationPolicy: Owner
+    template:
+      type: kubernetes.io/basic-auth
+  data:
+    - secretKey: password
+      remoteRef:
+        key: DB_PASSWORD
+    - secretKey: username
+      remoteRef:
+        key: DB_USERNAME
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: debug
+  namespace: kube-system
+spec:
+  instances: 1
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 1Gi
+  bootstrap:
+    # initdb:
+    #   database: debug
+    #   owner: debug
+    #   secret:
+    #     name: debug-db-secret
+    # To discuss.
+    # Would be nice to have a way to use a recovery if there is one, otherwise use the initdb.
+    recovery:
+      source: debug
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://my-gitops-platform/cnpg/debug
+      endpointURL: https://s3.eu-central-1.wasabisys.com
+      s3Credentials:
+        accessKeyId:
+          name: cnpg-debug
+          key: AWS_ACCESS_KEY_ID
+        secretAccessKey:
+          name: cnpg-debug
+          key: AWS_SECRET_ACCESS_KEY
+    retentionPolicy: 30d
+  externalClusters:
+    - name: debug
+      barmanObjectStore:
+        destinationPath: s3://my-gitops-platform/cnpg/debug
+        endpointURL: https://s3.eu-central-1.wasabisys.com
+        s3Credentials:
+          accessKeyId:
+            name: cnpg-debug
+            key: AWS_ACCESS_KEY_ID
+          secretAccessKey:
+            name: cnpg-debug
+            key: AWS_SECRET_ACCESS_KEY
+        wal:
+          maxParallel: 8
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: windmill-db-url
+  namespace: kube-system
+spec:
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: SecretStore
+    name: secret-store
+  target:
+    name: windmill-db-url
+    creationPolicy: Owner
+    template:
+      data:
+        url: postgres://{{ .username }}:{{ .password }}@debug-rw:5432/debug
+  data:
+    - secretKey: password
+      remoteRef:
+        key: DB_PASSWORD
+    - secretKey: username
+      remoteRef:
+        key: DB_USERNAME

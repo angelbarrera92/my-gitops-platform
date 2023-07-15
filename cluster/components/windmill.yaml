@@ -1,0 +1,55 @@
+---
+# Create a HelmRepository object to point to the windmill chart
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: windmill
+  namespace: kube-system
+spec:
+  interval: 1m
+  url: https://windmill-labs.github.io/windmill-helm-charts/
+---
+# Create a HelmRelease object to install the windmill
+kind: HelmRelease
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+metadata:
+  name: windmill
+  namespace: kube-system
+spec:
+  interval: 1m
+  dependsOn:
+    - name: cloudnative-pg
+  chart:
+    spec:
+      chart: windmill
+      version: "1.6.38"
+      sourceRef:
+        kind: HelmRepository
+        name: windmill
+        namespace: kube-system
+      interval: 1m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      retries: -1
+  values:
+    # https://github.com/windmill-labs/windmill-helm-charts/blob/main/charts/windmill/values.yaml
+    postgresql:
+      enabled: false
+    windmill:
+      appReplicas: 1
+      workerReplicas: 1
+      lspReplicas: 1
+      workerGroups: []
+      databaseUrlSecretName: windmill-db-url
+    ingress:
+      enabled: false
+
+
+# https://www.windmill.dev/docs/advanced/self_host
+# curl https://raw.githubusercontent.com/windmill-labs/windmill/main/init-db-as-superuser.sql -o init-db-as-superuser.sql
+# psql postgres://${superadminuser}:${superadminpass}@localhost:5432/debug -f init-db-as-superuser.sql
+# GRANT windmill_admin TO debug;
+# GRANT windmill_user TO debug;
