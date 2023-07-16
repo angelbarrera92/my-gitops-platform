@@ -1,6 +1,16 @@
 ---
 kind: Kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+- name: windmill-init-db-as-superuser
+  namespace: kube-system
+  files:
+  - init-db-as-superuser.sql
+
 resources:
   - secret-store.yaml
   - k8s-csi-s3.yaml

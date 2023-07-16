@@ -2,7 +2,7 @@
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: cnpg-debug
+  name: cnpg-s3
   namespace: kube-system
 spec:
   refreshInterval: 1m
@@ -10,7 +10,7 @@ spec:
     kind: SecretStore
     name: secret-store
   target:
-    name: cnpg-debug
+    name: cnpg-s3
     creationPolicy: Owner
   data:
     # Endpoint for S3-compatible storage
@@ -29,7 +29,7 @@ spec:
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: debug-db-secret
+  name: windmill-db-secret
   namespace: kube-system
 spec:
   refreshInterval: 1m
@@ -37,7 +37,7 @@ spec:
     kind: SecretStore
     name: secret-store
   target:
-    name: debug-db-secret
+    name: windmill-db-secret
     creationPolicy: Owner
     template:
       type: kubernetes.io/basic-auth
@@ -52,7 +52,7 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: debug
+  name: windmill-db
   namespace: kube-system
 spec:
   instances: 1
@@ -60,38 +60,43 @@ spec:
   storage:
     size: 1Gi
   bootstrap:
-    # initdb:
-    #   database: debug
-    #   owner: debug
-    #   secret:
-    #     name: debug-db-secret
+    initdb:
+      database: windmill
+      owner: windmill
+      secret:
+        name: windmill-db-secret
+      postInitApplicationSQLRefs:
+        configMapRefs:
+        - name: windmill-init-db-as-superuser
+          key: init-db-as-superuser.sql
     # To discuss.
     # Would be nice to have a way to use a recovery if there is one, otherwise use the initdb.
-    recovery:
-      source: debug
+    # recovery:
+    #   source: windmill
   backup:
     barmanObjectStore:
-      destinationPath: s3://my-gitops-platform/cnpg/debug
+      destinationPath: s3://my-gitops-platform/cnpg/windmill-db
       endpointURL: https://s3.eu-central-1.wasabisys.com
+      serverName: "windmill-db"
       s3Credentials:
         accessKeyId:
-          name: cnpg-debug
+          name: cnpg-s3
           key: AWS_ACCESS_KEY_ID
         secretAccessKey:
-          name: cnpg-debug
+          name: cnpg-s3
           key: AWS_SECRET_ACCESS_KEY
     retentionPolicy: 30d
   externalClusters:
-    - name: debug
+    - name: windmill
       barmanObjectStore:
-        destinationPath: s3://my-gitops-platform/cnpg/debug
+        destinationPath: s3://my-gitops-platform/cnpg/windmill-db
         endpointURL: https://s3.eu-central-1.wasabisys.com
         s3Credentials:
           accessKeyId:
-            name: cnpg-debug
+            name: cnpg-s3
             key: AWS_ACCESS_KEY_ID
           secretAccessKey:
-            name: cnpg-debug
+            name: cnpg-s3
             key: AWS_SECRET_ACCESS_KEY
         wal:
           maxParallel: 8
@@ -111,7 +116,7 @@ spec:
     creationPolicy: Owner
     template:
       data:
-        url: postgres://{{ .username }}:{{ .password }}@debug-rw:5432/debug
+        url: postgres://{{ .username }}:{{ .password }}@windmill-db-rw:5432/windmill
   data:
     - secretKey: password
       remoteRef:
@@ -119,3 +124,15 @@ spec:
     - secretKey: username
       remoteRef:
         key: DB_USERNAME
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: windmill-backups
+  namespace: kube-system
+spec:
+  immediate: true
+  schedule: "0 * * * *"
+  backupOwnerReference: self
+  cluster:
+    name: windmill-db
