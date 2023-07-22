@@ -87,7 +87,7 @@ spec:
           key: AWS_SECRET_ACCESS_KEY
     retentionPolicy: 30d
   externalClusters:
-    - name: windmill
+    - name: windmill-db
       barmanObjectStore:
         destinationPath: s3://my-gitops-platform/cnpg/windmill-db
         endpointURL: https://s3.eu-central-1.wasabisys.com
@@ -132,7 +132,7 @@ metadata:
   namespace: kube-system
 spec:
   immediate: true
-  schedule: "0 * * * *"
+  schedule: "0 0 * * *"
   backupOwnerReference: self
   cluster:
     name: windmill-db

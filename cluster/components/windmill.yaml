@@ -22,7 +22,7 @@ spec:
   chart:
     spec:
       chart: windmill
-      version: "1.6.38"
+      version: "1.6.43"
       sourceRef:
         kind: HelmRepository
         name: windmill
@@ -46,10 +46,3 @@ spec:
       databaseUrlSecretName: windmill-db-url
     ingress:
       enabled: false
-
-
-# https://www.windmill.dev/docs/advanced/self_host
-# curl https://raw.githubusercontent.com/windmill-labs/windmill/main/init-db-as-superuser.sql -o init-db-as-superuser.sql
-# psql postgres://${superadminuser}:${superadminpass}@localhost:5432/debug -f init-db-as-superuser.sql
-# GRANT windmill_admin TO debug;
-# GRANT windmill_user TO debug;
