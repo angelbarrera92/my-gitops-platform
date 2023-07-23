@@ -75,7 +75,7 @@ spec:
       source: windmill-db
   backup:
     barmanObjectStore:
-      destinationPath: s3://my-gitops-platform/cnpg/windmill-db-2
+      destinationPath: s3://my-gitops-platform/cnpg/windmill-db-v3
       endpointURL: https://s3.eu-central-1.wasabisys.com
       serverName: "windmill-db"
       s3Credentials:
@@ -89,7 +89,7 @@ spec:
   externalClusters:
     - name: windmill-db
       barmanObjectStore:
-        destinationPath: s3://my-gitops-platform/cnpg/windmill-db
+        destinationPath: s3://my-gitops-platform/cnpg/windmill-db-2
         endpointURL: https://s3.eu-central-1.wasabisys.com
         s3Credentials:
           accessKeyId:
