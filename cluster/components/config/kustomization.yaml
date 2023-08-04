@@ -15,4 +15,4 @@ resources:
   - secret-store.yaml
   - k8s-csi-s3.yaml
   - k8s-tunnel-controller.yaml
-  # - db.yaml
+  - db.yaml

@@ -8,6 +8,6 @@ resources:
   - k8s-tunnel-controller.yaml
   - metrics-server.yaml
   - reloader.yaml
-  # - cnpg.yaml
-  # - windmill.yaml
+  - cnpg.yaml
+  - windmill.yaml
   - kyverno.yaml
