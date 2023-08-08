@@ -125,7 +125,7 @@ spec:
   path: clusters/${cluster}
   prune: true
   dependsOn:
-    - name: flux-system-config
+    - name: flux-system
   sourceRef:
     kind: GitRepository
     name: flux-system
