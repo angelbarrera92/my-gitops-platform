@@ -7,7 +7,7 @@ generatorOptions:
 
 configMapGenerator:
 - name: metadata
-  namespace: kube-system
+  namespace: flux-system
   literals:
   - cluster=one
   - region=local
