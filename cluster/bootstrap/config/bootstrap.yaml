@@ -35,6 +35,11 @@ metadata:
 spec:
   interval: 1m
   path: cluster/bootstrap/config
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: metadata
+        optional: true
   prune: true
   dependsOn:
     - name: flux-system
@@ -85,7 +90,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m
-  path: cluster/apps
+  path: clusters/${cluster}/apps
   prune: true
   dependsOn:
     - name: flux-system

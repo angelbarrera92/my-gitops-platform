@@ -1,0 +1,10 @@
+---
+# Create a HelmRepository object to point to the onechart chart
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: onechart
+  namespace: kube-system
+spec:
+  interval: 1m
+  url: https://chart.onechart.dev
