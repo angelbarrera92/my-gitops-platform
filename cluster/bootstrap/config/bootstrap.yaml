@@ -114,19 +114,3 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
----
-kind: Kustomization
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-metadata:
-  name: cluster
-  namespace: flux-system
-spec:
-  interval: 1m
-  path: clusters/${cluster}
-  prune: true
-  dependsOn:
-    - name: flux-system
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
