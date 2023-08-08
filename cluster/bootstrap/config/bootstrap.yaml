@@ -9,7 +9,7 @@ spec:
   interval: 1m
   url: https://github.com/angelbarrera92/my-gitops-platform.git
   ref:
-    branch: main
+    branch: cluster-variable
 ---
 # Create a Kustomization object to install the Flux components
 kind: Kustomization
