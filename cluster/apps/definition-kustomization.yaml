@@ -1,6 +1,6 @@
 ---
 kind: Kustomization
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 metadata:
   name: apps-definitions
   namespace: flux-system
